@@ -34,7 +34,7 @@ def decision(our_team, their_team, ball, your_side, half, time_left, our_score, 
             angle_to_ball = atan2(direction_to_ball[1], direction_to_ball[0])
             manager_decision[i]['alpha'] = angle_to_ball
 
-            manager_decision[i]['force'] = player['a_max']*player["mass"]
+            manager_decision[i]['force'] = 0
             
             manager_decision[i]['shot_request'] = True
             manager_decision[i]['shot_power'] = player['shot_power_max']
