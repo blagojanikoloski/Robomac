@@ -13,11 +13,11 @@ def team_properties():
     properties['team_name'] = "Проба UTD"
     properties['player_names'] = player_names
     properties['image_name'] = 'Blue.png' # use image resolution 153x153
-    properties['weight_points'] = (20, 15, 15)
-    properties['radius_points'] = (20, 15, 20)
-    properties['max_acceleration_points'] = (40, 10, 15)
-    properties['max_speed_points'] = (40, 15, 25)
-    properties['shot_power_points'] = (30, 25, 18)
+    properties['weight_points'] = (2, 1, 1)
+    properties['radius_points'] = (2, 1, 2)
+    properties['max_acceleration_points'] = (4, 1, 1)
+    properties['max_speed_points'] = (4, 1, 2)
+    properties['shot_power_points'] = (3, 2, 1)
     return properties
 
 # This function gathers game information and controls each one of your three players
@@ -34,7 +34,20 @@ def decision(our_team, their_team, ball, your_side, half, time_left, our_score, 
             angle_to_ball = atan2(direction_to_ball[1], direction_to_ball[0])
             manager_decision[i]['alpha'] = angle_to_ball
 
-            manager_decision[i]['force'] = 0
+            manager_decision[i]['force'] = player['a_max'] * player['mass']
+            
+            manager_decision[i]['shot_request'] = True
+            manager_decision[i]['shot_power'] = player['shot_power_max']
+
+        if i == 2:
+
+            # Determine the direction towards the ball
+            direction_to_ball = (ball['x'] - player['x'], ball['y'] - player['y'])
+            # Calculate the angle between the player and the ball
+            angle_to_ball = atan2(direction_to_ball[1], direction_to_ball[0])
+            manager_decision[i]['alpha'] = angle_to_ball
+
+            manager_decision[i]['force'] = player['a_max'] * player['mass']
             
             manager_decision[i]['shot_request'] = True
             manager_decision[i]['shot_power'] = player['shot_power_max']
