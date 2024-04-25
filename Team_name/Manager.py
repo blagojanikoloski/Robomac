@@ -37,16 +37,6 @@ def get_proximity_to_wall(wall, radius_player):
     return abs(wall - radius_player)
 
 
-def make_striker(ball, i, manager_decision, player):
-    direction_to_ball = (ball['x'] - player['x'], ball['y'] - player['y'])
-    # Calculate the angle between the player and the ball
-    angle_to_ball = atan2(direction_to_ball[1], direction_to_ball[0])
-    manager_decision[i]['alpha'] = angle_to_ball
-    manager_decision[i]['force'] = player['a_max'] * player['mass']
-    manager_decision[i]['shot_request'] = False
-    manager_decision[i]['shot_power'] = player['shot_power_max']
-
-
 def check_if_collision_with_opponents(player, their_team, ball):
     their_players = (their_team[0], their_team[1], their_team[2])
     opp1 = their_players[0]
@@ -101,11 +91,11 @@ def has_ball(player, ball):
 def check_if_ball_is_correct_side(ball, player, your_side):
     if your_side == 'left':
         if player['x'] >= ball['x']:
-            if player['y']-upper_wall<=1:
-                print(player['y'])
-            elif player['y'] == lower_wall:
-                print("LOWER WALL ")
+            if player['y']-upper_wall<=10:
                 return -np.pi
+            elif lower_wall-player['y']<=10:
+                print("LOWER WALL ")
+                return np.pi
             else:
                 return np.pi
         else:
@@ -119,6 +109,7 @@ def check_if_ball_is_correct_side(ball, player, your_side):
 
 def run_player_to_target(player, i, manager_decision, target_x, target_y, ball, their_team, your_side):
     if has_ball(player, ball):
+        manager_decision[i]['force'] = player['a_max'] * player["mass"]  # Maximum acceleration to move quickly
         manager_decision[i]['alpha'] = 2 * np.pi - check_if_ball_is_correct_side(ball, player, your_side)
         opponent = check_if_collision_with_opponents(player, their_team, ball)
         if check_if_collision_with_opponents(player, their_team, ball):
@@ -280,29 +271,29 @@ def decision(our_team, their_team, ball, your_side, half, time_left, our_score, 
                 if dist_ball <= 20 and player['x'] < ball['x']:
                     run_player_to_ball_and_shoot(player, i, manager_decision, dist_ball, ball, your_side)
 
-            # elif i == 1:  # If player is the goalkeeper
-            #     dist_ball = ((player['x'] - ball['x'])**2 + (player['y'] - ball['y'])**2)**0.5 - 15 - player['radius']
-            #     manage_goalkeeper_left(ball, your_side, manager_decision, i, player, dist_ball, their_team)
+            elif i == 1:  # If player is the goalkeeper
+                dist_ball = ((player['x'] - ball['x'])**2 + (player['y'] - ball['y'])**2)**0.5 - 15 - player['radius']
+                manage_goalkeeper_left(ball, your_side, manager_decision, i, player, dist_ball, their_team)
 
-            # elif i == 3: 
-            #     dist_ball = ((player['x'] - ball['x'])**2 + (player['y'] - ball['y'])**2)**0.5 - 15 - player['radius']
-            #     if ball['x'] < 100 and player['x'] < ball['x']:
-            #         # If the ball is under certain other coordinates and the player is in a specific area
-            #         run_keeper_to_ball_and_shoot(player, i, manager_decision, dist_ball, ball, your_side)
-            #     elif ball['x'] < 400 and ball['y'] < middle_of_playground:
-            #         # If the ball is under certain coordinates
-            #         target_x, target_y = 50, middle_of_playground + 50
-            #         run_player_to_target(player, i, manager_decision, target_x, target_y, ball, their_team, your_side)
-            #     elif ball['x'] < 400 and ball['y'] > middle_of_playground:
-            #         # If the ball is under certain coordinates
-            #         target_x, target_y = 50, middle_of_playground - 50
-            #         run_player_to_target(player, i, manager_decision, target_x, target_y, ball, their_team, your_side)
-            #     else:
-            #         dist_ball = ((player['x'] - ball['x'])**2 + (player['y'] - ball['y'])**2)**0.5 - 15 - player['radius']
-            #         target_x, target_y = find_coordinates_for_straight_shot(ball, right_goal_upper, player, your_side)
-            #         run_player_to_target(player, i, manager_decision, target_x, target_y, ball, their_team, your_side)
-            #         if dist_ball <= 5:
-            #             run_player_to_ball_and_shoot(player, i, manager_decision, dist_ball, ball, your_side)
+            elif i == 3: 
+                dist_ball = ((player['x'] - ball['x'])**2 + (player['y'] - ball['y'])**2)**0.5 - 15 - player['radius']
+                if ball['x'] < 100 and player['x'] < ball['x']:
+                    # If the ball is under certain other coordinates and the player is in a specific area
+                    run_keeper_to_ball_and_shoot(player, i, manager_decision, dist_ball, ball, your_side)
+                elif ball['x'] < 400 and ball['y'] < middle_of_playground:
+                    # If the ball is under certain coordinates
+                    target_x, target_y = 50, middle_of_playground + 50
+                    run_player_to_target(player, i, manager_decision, target_x, target_y, ball, their_team, your_side)
+                elif ball['x'] < 400 and ball['y'] > middle_of_playground:
+                    # If the ball is under certain coordinates
+                    target_x, target_y = 50, middle_of_playground - 50
+                    run_player_to_target(player, i, manager_decision, target_x, target_y, ball, their_team, your_side)
+                else:
+                    dist_ball = ((player['x'] - ball['x'])**2 + (player['y'] - ball['y'])**2)**0.5 - 15 - player['radius']
+                    target_x, target_y = find_coordinates_for_straight_shot(ball, right_goal_upper, player, your_side)
+                    run_player_to_target(player, i, manager_decision, target_x, target_y, ball, their_team, your_side)
+                    if dist_ball <= 5:
+                        run_player_to_ball_and_shoot(player, i, manager_decision, dist_ball, ball, your_side)
             else:
                 manager_decision[i]['alpha'] = np.pi # player['alpha'] # choose direction for running (0, 2*pi)
                 manager_decision[i]['force'] = 0 # accelerate or deaccelerate your player up to 'v_max' or 0: (-0.5 * 'a_max' * 'mass', 'a_max' * 'mass')

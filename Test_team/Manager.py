@@ -13,11 +13,11 @@ def team_properties():
     properties['team_name'] = "Проба UTD"
     properties['player_names'] = player_names
     properties['image_name'] = 'Blue.png' # use image resolution 153x153
-    properties['weight_points'] = (2, 1, 1)
-    properties['radius_points'] = (2, 1, 2)
-    properties['max_acceleration_points'] = (4, 1, 1)
-    properties['max_speed_points'] = (4, 1, 2)
-    properties['shot_power_points'] = (3, 2, 1)
+    properties['weight_points'] = (20, 10, 1)
+    properties['radius_points'] = (20, 10, 2)
+    properties['max_acceleration_points'] = (40, 10, 1)
+    properties['max_speed_points'] = (40, 10, 2)
+    properties['shot_power_points'] = (30, 20, 1)
     return properties
 
 # This function gathers game information and controls each one of your three players
