@@ -279,10 +279,19 @@ def run_after_fastest(player, i, manager_decision, their_team, ball):
 
 def manage_universal_shooting(manager_decision, their_team, your_side, ball, player, i):
     if your_side == 'left':
+        # If very close to own goal
         if ball['x'] < 200 and player['x']<ball['x']:
             manager_decision[i]['shot_power'] = player['shot_power_max']
+        # If very close to enemy goal
+        elif ball['x'] > 1200:
+            manager_decision[i]['shot_power'] = player['shot_power_max']
+
     else:
+        # If very close to own goal
         if ball['x'] > 1200 and player['x']>ball['x']:
+            manager_decision[i]['shot_power'] = player['shot_power_max']
+        # If very close to enemy goal
+        elif ball['x'] < 200:
             manager_decision[i]['shot_power'] = player['shot_power_max']
 
 
@@ -341,14 +350,14 @@ def decision(our_team, their_team, ball, your_side, half, time_left, our_score, 
                 # While attacking, and striker is fighting for the ball on the bottom    
                 elif ball['x'] > 1000 and ball['y'] > middle_of_playground and our_team[0]['y']>middle_of_playground and striker_dist_to_ball <= 100: 
                     dist_ball = ((player['x'] - ball['x'])**2 + (player['y'] - ball['y'])**2)**0.5 - 15 - player['radius']
-                    target_x, target_y = 1150 , 300
+                    target_x, target_y = 1100 , 300
                     run_player_to_target(player, i, manager_decision, target_x, target_y, ball, their_team, your_side)
                     if dist_ball <= 100:
                         run_player_to_ball_and_shoot(player, i, manager_decision, dist_ball, ball, your_side) 
                 # While attacking, and striker is fighting for the ball on the top 
                 elif ball['x'] > 1000 and ball['y'] < middle_of_playground and our_team[0]['y']<middle_of_playground and striker_dist_to_ball <= 100: 
                     dist_ball = ((player['x'] - ball['x'])**2 + (player['y'] - ball['y'])**2)**0.5 - 15 - player['radius']
-                    target_x, target_y = 1150 , 520
+                    target_x, target_y = 1100 , 520
                     run_player_to_target(player, i, manager_decision, target_x, target_y, ball, their_team, your_side)
                     if dist_ball <= 100:
                         run_player_to_ball_and_shoot(player, i, manager_decision, dist_ball, ball, your_side)   
@@ -416,7 +425,7 @@ def decision(our_team, their_team, ball, your_side, half, time_left, our_score, 
                     # If the ball is under certain coordinates
                     target_x, target_y = 1316, middle_of_playground - 50
                     run_player_to_target(player, i, manager_decision, target_x, target_y, ball, their_team, your_side)
-                                # While attacking, and striker is fighting for the ball on the bottom    
+                # While attacking, and striker is fighting for the ball on the bottom    
                 elif ball['x'] < 300 and ball['y'] > middle_of_playground and our_team[0]['y']>middle_of_playground and striker_dist_to_ball <= 100: 
                     dist_ball = ((player['x'] - ball['x'])**2 + (player['y'] - ball['y'])**2)**0.5 - 15 - player['radius']
                     target_x, target_y = 200 , 300
