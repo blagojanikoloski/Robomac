@@ -280,7 +280,6 @@ def manage_universal_shooting(manager_decision, their_team, your_side, ball, pla
     if your_side == 'left':
         if ball['x'] < 200 and player['x']<ball['x']:
             manager_decision[i]['shot_power'] = player['shot_power_max']
-            print("entered")
     else:
         if ball['x'] > 1200 and player['x']>ball['x']:
             manager_decision[i]['shot_power'] = player['shot_power_max']
