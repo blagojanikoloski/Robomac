@@ -276,6 +276,16 @@ def run_after_fastest(player, i, manager_decision, their_team, ball):
     manager_decision[i]['force'] = player['a_max'] * player["mass"]
 
 
+def manage_universal_shooting(manager_decision, their_team, your_side, ball, player, i):
+    if your_side == 'left':
+        if ball['x'] < 200 and player['x']<ball['x']:
+            manager_decision[i]['shot_power'] = player['shot_power_max']
+            print("entered")
+    else:
+        if ball['x'] > 1200 and player['x']>ball['x']:
+            manager_decision[i]['shot_power'] = player['shot_power_max']
+
+
 # This function gathers game information and controls each one of your three players
 def decision(our_team, their_team, ball, your_side, half, time_left, our_score, their_score):
     manager_decision = [dict(), dict(), dict()]
@@ -285,6 +295,8 @@ def decision(our_team, their_team, ball, your_side, half, time_left, our_score, 
         if(your_side == 'left'):
             player = our_team[i]
             manager_decision[i]['shot_power'] = player['shot_power_max'] / 100
+
+            manage_universal_shooting(manager_decision, their_team, your_side, ball, player, i)
             manager_decision[i]['shot_request'] = False
 
             
@@ -359,7 +371,9 @@ def decision(our_team, their_team, ball, your_side, half, time_left, our_score, 
         else:
             
             player = our_team[i]
-            manager_decision[i]['shot_power'] = player['shot_power_max']
+            manager_decision[i]['shot_power'] = player['shot_power_max'] / 100
+            manage_universal_shooting(manager_decision, their_team, your_side, ball, player, i)
+
             manager_decision[i]['shot_request'] = False
 
             
