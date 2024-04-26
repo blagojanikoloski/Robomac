@@ -223,7 +223,7 @@ def manage_goalkeeper_right(ball, your_side, manager_decision, i, player, dist_b
         run_player_to_target(player, i, manager_decision, target_x, target_y, ball, their_team, your_side)
         
 def run_player_to_ball_and_shoot(player, i, manager_decision, dist_ball, ball, your_side):
-    
+    manager_decision[i]['shot_power'] = player['shot_power_max']
     if player['x']<ball['x'] and your_side == 'left': 
         manager_decision[i]['shot_request'] = True
     if player['x']>ball['x'] and your_side == 'right':
@@ -302,7 +302,10 @@ def decision(our_team, their_team, ball, your_side, half, time_left, our_score, 
                 else:
                     target_x, target_y = find_coordinates_for_straight_shot(ball, right_goal_lower, player, your_side)
                 run_player_to_target(player, i, manager_decision, target_x, target_y, ball, their_team, your_side)
-                if dist_ball <= 20 and player['x'] < ball['x']:
+
+                dist_target = ((player['x'] - target_x)**2 + (player['y'] - target_y)**2)**0.5 - player['radius']
+
+                if dist_target <= 1 and player['x'] < ball['x']:
                     run_player_to_ball_and_shoot(player, i, manager_decision, dist_ball, ball, your_side)
 
             elif i == 1:  # If player is the goalkeeper
@@ -343,7 +346,10 @@ def decision(our_team, their_team, ball, your_side, half, time_left, our_score, 
                     else:
                         target_x, target_y = find_coordinates_for_straight_shot(ball, right_goal_lower, player, your_side)
                     run_player_to_target(player, i, manager_decision, target_x, target_y, ball, their_team, your_side)
-                    if dist_ball <= 20 and player['x'] < ball['x']:
+                    
+                    dist_target = ((player['x'] - target_x)**2 + (player['y'] - target_y)**2)**0.5 - player['radius']
+
+                    if dist_target <= 1 and player['x'] < ball['x']:
                         run_player_to_ball_and_shoot(player, i, manager_decision, dist_ball, ball, your_side)
             else:
                 manager_decision[i]['alpha'] = np.pi # player['alpha'] # choose direction for running (0, 2*pi)
@@ -371,7 +377,10 @@ def decision(our_team, their_team, ball, your_side, half, time_left, our_score, 
                 else:
                     target_x, target_y = find_coordinates_for_straight_shot(ball, left_goal_lower, player, your_side)
                 run_player_to_target(player, i, manager_decision, target_x, target_y, ball, their_team, your_side)
-                if dist_ball <= 20 and player['x'] > ball['x']:
+                
+                dist_target = ((player['x'] - target_x)**2 + (player['y'] - target_y)**2)**0.5 - player['radius']
+
+                if dist_target <= 1 and player['x'] < ball['x']:
                     run_player_to_ball_and_shoot(player, i, manager_decision, dist_ball, ball, your_side)
 
             elif i == 1:  # If player is the goalkeeper
@@ -413,7 +422,9 @@ def decision(our_team, their_team, ball, your_side, half, time_left, our_score, 
                     else:
                         target_x, target_y = find_coordinates_for_straight_shot(ball, left_goal_lower, player, your_side)
                     run_player_to_target(player, i, manager_decision, target_x, target_y, ball, their_team, your_side)
-                    if dist_ball <= 20 and player['x'] > ball['x']:
+                    dist_target = ((player['x'] - target_x)**2 + (player['y'] - target_y)**2)**0.5 - player['radius']
+
+                    if dist_target <= 1 and player['x'] < ball['x']:
                         run_player_to_ball_and_shoot(player, i, manager_decision, dist_ball, ball, your_side)
             else:
                 manager_decision[i]['alpha'] = np.pi # player['alpha'] # choose direction for running (0, 2*pi)
